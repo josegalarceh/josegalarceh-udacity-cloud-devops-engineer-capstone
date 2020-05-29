@@ -42,6 +42,3 @@
 * blue-service.json : Create the blue service
 * index.html : Web site Index file.
 ```
-
-## Run the project:
-```sh
