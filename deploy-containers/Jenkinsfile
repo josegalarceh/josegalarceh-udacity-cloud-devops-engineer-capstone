@@ -41,8 +41,8 @@ pipeline {
 				withAWS(region:'us-east-2', credentials:'capstone') {
 					sh '''
 						cd deploy-containers
-						pwd
-						ls -la
+						whoami
+						kubectl version --short --client
 						kubectl config use-context arn:aws:eks:us-east-2:793577097278:cluster/capstonecluster
 					'''
 				}
