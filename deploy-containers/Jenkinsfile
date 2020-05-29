@@ -5,7 +5,7 @@ pipeline {
 		stage('Lint HTML') {
 			steps {
 				sh '''
-					cd Deploy-containers-pipeline
+					cd deploy-containers
 					tidy -q -e *.html
 				'''
 			}
@@ -16,8 +16,8 @@ pipeline {
 				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]){
 					sh '''
 
-						cd Deploy-containers-pipeline
-						docker build -t sebastianreyes/capstone .
+						cd deploy-containers
+						docker build -t josegalarceh/capstone .
 
 					'''
 				}
@@ -28,9 +28,9 @@ pipeline {
 			steps {
 				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]){
 					sh '''
-						cd Deploy-containers-pipeline
+						cd deploy-containers
 						docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-						docker push sebastianreyes/capstone
+						docker push josegalarceh/capstone
 					'''
 				}
 			}
@@ -40,7 +40,7 @@ pipeline {
 			steps {
 				withAWS(region:'us-east-2', credentials:'aws-static') {
 					sh '''
-						cd Deploy-containers-pipeline
+						cd deploy-containers
 						kubectl config use-context arn:aws:eks:us-east-2:875063165957:cluster/capstonecluster
 					'''
 				}
@@ -51,7 +51,7 @@ pipeline {
 			steps {
 				withAWS(region:'us-east-2', credentials:'aws-static') {
 					sh '''
-						cd Deploy-containers-pipeline
+						cd deploy-containers
 						kubectl apply -f ./blue-controller.json
 					'''
 				}
@@ -62,7 +62,7 @@ pipeline {
 			steps {
 				withAWS(region:'us-east-2', credentials:'aws-static') {
 					sh '''
-						cd Deploy-containers-pipeline
+						cd deploy-containers
 						kubectl apply -f ./green-controller.json
 					'''
 				}
@@ -73,7 +73,7 @@ pipeline {
 			steps {
 				withAWS(region:'us-east-2', credentials:'aws-static') {
 					sh '''
-						cd Deploy-containers-pipeline
+						cd deploy-containers
 						kubectl apply -f ./blue-service.json
 					'''
 				}
@@ -90,7 +90,7 @@ pipeline {
 			steps {
 				withAWS(region:'us-east-2', credentials:'aws-static') {
 					sh '''
-						cd Deploy-containers-pipeline
+						cd deploy-containers
 						kubectl apply -f ./green-service.json
 					'''
 				}
